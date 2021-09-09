@@ -4,9 +4,10 @@ import BillMain from '../../components/home/BillMain.vue'
 </script>
 
 <template>
-	<div class="w-36 h-44">
+	<div class="flex flex-col">
 		<BillUpper/>
-		1234
-		<BillMain/>
+		<div class="flex-1 overflow-scroll bg-gray-100">
+			<BillMain />
+		</div>
 	</div>
 </template>

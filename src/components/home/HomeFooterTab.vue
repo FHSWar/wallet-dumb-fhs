@@ -9,8 +9,8 @@ const emit = defineEmits(['click'])
 </script>
 
 <template>
-	<footer class="flex border-t-2 border-gray-300 border-opacity-50 w-screen bg-yellow-100">
-		<div class="flex-1 flex flex-col text-center"
+	<footer class="flex w-screen border-t-2 border-gray-300 border-opacity-50 bg-yellow-100">
+		<div class="flex-1 flex flex-col mb-1 text-center active:bg-yellow-200 select-none"
 			 v-for="button in tabButtons"
 			 :key="button.name"
 			 @click="emit('click', button.component)"

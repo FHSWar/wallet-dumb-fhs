@@ -3,21 +3,27 @@ import Bill from './home/Bill.vue'
 import Chart from './home/Chart.vue'
 import Mine from './home/Mine.vue'
 import Tab from '../components/home/HomeFooterTab.vue'
-import { ref } from 'vue'
+import {computed, ref, onMounted} from 'vue'
 
-const component = ref('Bill')
-function tabClick(componentName){
-	component.value = componentName
-}
+const activeTab = ref('Bill')
+const tabClick = (componentName) => activeTab.value = componentName
+const component = computed(() => {
+	let component
+	switch (activeTab.value){
+		case 'Bill': component = Bill
+			break
+		case 'Chart': component = Chart
+			break
+		case 'Mine': component = Mine
+			break
+	}
+	return component
+})
 </script>
 
 <template>
-	<div class="flex flex-col w-screen h-screen bg-gray-100">
-		<div class="flex-1">
-			<Bill v-show="component === 'Bill'"/>
-			<Chart v-show="component === 'Chart'"/>
-			<Mine v-show="component === 'Mine'"/>
-		</div>
+	<div class="flex flex-col bg-gray-50 h-screen overflow-hidden">
+		<component :is="component" class="flex-1 overflow-hidden"/>
 		<Tab @click="tabClick"/>
 	</div>
 </template>
