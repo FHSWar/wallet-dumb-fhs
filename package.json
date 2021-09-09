@@ -1,0 +1,28 @@
+ {
+  "name": "wallet-dumb-fhs",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "yarn eslint ."
+  },
+  "dependencies": {
+    "@better-scroll/core": "^2.4.2",
+    "@better-scroll/pull-down": "^2.4.2",
+    "@better-scroll/pull-up": "^2.4.2",
+    "vue": "^3.2.6",
+    "vue-router": "4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.6.1",
+    "@vue/compiler-sfc": "^3.2.6",
+    "autoprefixer": "^10.3.4",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^7.17.0",
+    "postcss": "^8.3.6",
+    "tailwindcss": "^2.2.14",
+    "vite": "^2.5.4"
+  }
+}
