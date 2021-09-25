@@ -2,8 +2,9 @@
 import Bill from './home/Bill.vue'
 import Chart from './home/Chart.vue'
 import Mine from './home/Mine.vue'
+import Scroll from './home/Scroll.vue'
 import Tab from '../components/home/HomeFooterTab.vue'
-import {computed, ref, onMounted} from 'vue'
+import {computed, ref} from 'vue'
 
 const activeTab = ref('Bill')
 const tabClick = (componentName) => activeTab.value = componentName
@@ -15,6 +16,8 @@ const component = computed(() => {
 		case 'Chart': component = Chart
 			break
 		case 'Mine': component = Mine
+			break
+		case 'Scroll': component = Scroll
 			break
 	}
 	return component
