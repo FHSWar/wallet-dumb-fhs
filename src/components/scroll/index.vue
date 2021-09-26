@@ -42,8 +42,7 @@ const container = ref(null)
 const scroll = ref(null)
 const bubble = ref(null)
 const content = ref(null)
-let bscroll // 下面会让 bscroll 变成响应式对象
-// watchEffect(()=>{console.log('loading changed', props.loading)})
+let bscroll // bscroll 不需要是响应式对象
 
 onBeforeMount(() => {
     initScrollParam()
