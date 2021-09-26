@@ -4,10 +4,11 @@
     :loading="scrollLoading"
     :noMore="noMore"
     :wrapper-height="500"
-    @pullingDown="pullingDownHandler"
-    @pullingUp="pullingUpHandler"
   >
-
+  <!-- 
+    @pullingDown="pullingDownHandler"
+    @pullingUp="pullingUpHandler" 
+  -->
     <!-- 内容的主体 -->
     <div class="up-down__content">
       <ul style="list-style: none">
