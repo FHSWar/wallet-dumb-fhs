@@ -1,4 +1,11 @@
 <script setup>
+/**
+* @1900-2100区间内的公历、农历互转
+* @charset UTF-8
+* @Author  fhs-war(fhswar0504@163.com)
+* @Time    2021-09-26
+* @Version 1.0.0
+*/
 // 引入放在顶部，vue 相关的放最下面，其他非项目内部文件次之，项目内部文件放在最上面
 import Bubble from './Bubble.vue'
 import Loading from './Loading.vue'
@@ -6,15 +13,15 @@ import BScroll from "@better-scroll/core"
 import PullDown from "@better-scroll/pull-down"
 import Pullup from "@better-scroll/pull-up"
 import { ref, useAttrs } from 'vue'
-// import { ref, useAttrs, watchEffect } from 'vue'
-import { reactive } from "@vue/reactivity"
 import { defineEmits, onBeforeMount, onMounted, onUpdated } from "@vue/runtime-core"
-
 
 BScroll.use(PullDown)
 BScroll.use(Pullup)
 
-// 顺序依次是：emit -> props, attrs, slots -> reactive data -> computed data -> watch data -> life cycle hook -> methods
+/* 
+ * 顺序依次是：
+ * emit -> props, attrs, slots -> reactive data -> computed data -> watch data -> life cycle hook -> methods 
+ * */
 // emit 不写在 defineEmits 仍能 emit 且仍会在 attrs 里 （写在 defineEmits 里就不会出现在 attrs 中）
 const emit = defineEmits() // ['pullingDown', 'pullingUp']
 /*
@@ -51,37 +58,7 @@ onUpdated(() => {
     calcSize()
 })
 
-function initWrapper() {
-    // 设置 wrapper 高度
-    scroll.value.style.height = `${props.wrapperHeight}px`;
-}
-function initScroll() {
-    // 初始化 better-scroll
-    bscroll = reactive(new BScroll(scroll.value, {
-        bounceTime: 800,
-        probeType: 2,
-        pullDownRefresh: emitPullingDown.value && { threshold: 70, stop: 56},
-        pullUpLoad: emitPullingUp.value,
-    }));
-    if(emitPullingDown.value) { bscroll.on("pullingDown", () => { emit("pullingDown", bscroll) }) }
-    if(emitPullingUp.value) { bscroll.on("pullingUp", () => { emit("pullingUp", bscroll) }) }
-    bscroll.on("scroll", (pos) => {
-        if(bubble.value) {
-            // vm.$data 上面的值会被代理到 vm 上，vue2 和 vue3 都是这样
-            bubble.value.y = pos.y - 67
-        }
-    });
-}
-// 计算 content 与 wrapper 的相对高度，content 比 wrapper 短的话就隐藏 pullUpTips
-function calcSize() {
-    // 判断 content 是否小于 wrapper， 是就隐藏底部上划提示语
-    content.value.offsetHeight < props.wrapperHeight
-        ? (pullUpTipsShow.value = false)
-        : (pullUpTipsShow.value = true);
-    // refresh 以使滚动正常工作
-    bscroll.refresh()
-}
-// 判断是否需要向父组件发射事件
+// 判断是否需要向父组件发射事件，以及是否展示对应块的提示文字和动画，这个处理很关键
 function initScrollParam() {
     console.log('onBeforeMount', Object.keys(attrs))
     const attrsKeys = Object.keys(attrs)
@@ -97,6 +74,36 @@ function initScrollParam() {
             emitPullingUp.value = true
             break
     }
+}
+// 初始化 better-scroll
+function initScroll() {
+    bscroll = new BScroll(scroll.value, {
+        bounceTime: 800,
+        probeType: 2,
+        pullDownRefresh: emitPullingDown.value && { threshold: 70, stop: 56},
+        pullUpLoad: emitPullingUp.value,
+    })
+    if(emitPullingDown.value) { bscroll.on("pullingDown", () => { emit("pullingDown", bscroll) }) }
+    if(emitPullingUp.value) { bscroll.on("pullingUp", () => { emit("pullingUp", bscroll) }) }
+    bscroll.on("scroll", (pos) => {
+        if(bubble.value) {
+            // vm.$data 上面的值会被代理到 vm 上，vue2 和 vue3 都是这样
+            bubble.value.y = pos.y - 67
+        }
+    });
+}
+// 设置 wrapper 高度
+function initWrapper() {
+    scroll.value.style.height = `${props.wrapperHeight}px`;
+}
+// 计算 content 与 wrapper 的相对高度，content 比 wrapper 短的话就隐藏 pullUpTips
+function calcSize() {
+    // 判断 content 是否小于 wrapper， 是就隐藏底部上划提示语
+    content.value.offsetHeight < props.wrapperHeight
+        ? (pullUpTipsShow.value = false)
+        : (pullUpTipsShow.value = true);
+    // refresh 以使滚动正常工作
+    bscroll.refresh()
 }
 
 </script>

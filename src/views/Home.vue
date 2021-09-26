@@ -26,7 +26,12 @@ const component = computed(() => {
 
 <template>
 	<div class="flex flex-col bg-gray-50 h-screen overflow-hidden">
-		<component :is="component" class="flex-1 overflow-hidden"/>
+		<keep-alive>
+			<component
+				class="flex-1 overflow-hidden"
+				:is="component"
+			/>
+		</keep-alive>
 		<Tab @click="tabClick"/>
 	</div>
 </template>
