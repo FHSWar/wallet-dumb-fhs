@@ -34,14 +34,13 @@ const props = defineProps({
     noMore: { type: Boolean, required: true }, // 没有更多数据
     wrapperHeight: { type: Number, default: window.innerHeight }, // 容器高度，默认撑满
 })
-const attrs = useAttrs()
+const attrs = useAttrs() // 用于访问父组件传进来的属性，方法。（注意：在 defineEmits 中注册的不会出现在 attrs 中）
 const pullUpTipsShow = ref(false) // 用于控制底部的显隐
 const emitPullingDown = ref(false)
 const emitPullingUp = ref(false) // 与上划不同，下划动画一个条件可以搞定，因为不需要判断内容高度与容器高度的大小关系
-const container = ref(null)
-const scroll = ref(null)
-const bubble = ref(null)
-const content = ref(null)
+const scroll = ref(null) // 滚动容器
+const bubble = ref(null) // 粘性气泡
+const content = ref(null) // 内容
 let bscroll // bscroll 不需要是响应式对象
 
 onBeforeMount(() => {
@@ -107,7 +106,7 @@ function calcSize() {
 </script>
 
 <template>
-  <div class="up-down__container" ref="container">
+  <div class="up-down__container">
     <div class="up-down__wrapper" ref="scroll">
       <div>
         <!-- 下拉提示语：提示松手，提示加载中，提示加载完成， 一般只做数据的刷新 -->
