@@ -1,6 +1,6 @@
 <script setup>
 /**
-* @1900-2100区间内的公历、农历互转
+* @集成了上拉下拉的滚动容器，简单好用
 * @charset UTF-8
 * @Author  fhs-war(fhswar0504@163.com)
 * @Time    2021-09-26
