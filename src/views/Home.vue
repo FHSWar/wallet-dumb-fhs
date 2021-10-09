@@ -1,38 +1,31 @@
 <script setup>
-import Bill from './home/Bill.vue'
-import Chart from './home/Chart.vue'
-import Mine from './home/Mine.vue'
-import Scroll from './home/Scroll.vue'
 import Tab from '../components/home/HomeFooterTab.vue'
-import {computed, ref} from 'vue'
+import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const bill = () => { router.push({name: 'Bill'}) }
+const chart = () => { router.push({ name: 'Chart'}) }
+const mine = () => { router.push({ name: 'Mine'}) }
+
 
 const activeTab = ref('Bill')
-const tabClick = (componentName) => activeTab.value = componentName
-const component = computed(() => {
-	let component
-	switch (activeTab.value){
-		case 'Bill': component = Bill
-			break
-		case 'Chart': component = Chart
-			break
-		case 'Mine': component = Mine
-			break
-		case 'Scroll': component = Scroll
-			break
+const tabClick = (componentName) => (activeTab.value = componentName)
+watch(() => activeTab.value, () => {
+	switch(activeTab.value) {
+		case 'Bill': bill(); break
+		case 'Chart': chart(); break
+		case 'Mine': mine(); break
 	}
-	return component
 })
 </script>
 
 <template>
-	<div class="flex flex-col bg-gray-50 h-screen overflow-hidden">
-		<keep-alive>
-			<component
-				class="flex-1 overflow-hidden"
-				:is="component"
-			/>
-		</keep-alive>
-		<Tab @click="tabClick"/>
+	<div class="bg-gray-50">
+		<div class="flex-grow">
+			<router-view />
+		</div>
+		<Tab class="fixed bottom-0" @click="tabClick"/>
 	</div>
 </template>
 

@@ -1,7 +1,6 @@
 <script setup>
 import BillUpper from '../../components/home/BillUpper.vue'
 import BillMain from '../../components/home/BillMain.vue'
-
 </script>
 
 <template>

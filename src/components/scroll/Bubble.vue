@@ -7,8 +7,9 @@
     data() {
       return {
         y: 0,
+        ratio: '',
         width: 50,
-        height: 80
+        height: 80,
       }
     },
     computed: {
