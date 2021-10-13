@@ -1,9 +1,18 @@
 <script setup>
-import { computed, reactive } from 'vue'
+import capsulatedStore from '../components/storeUtil.vue'
+import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
 import { Toast } from 'vant'
 import dayjs from 'dayjs'
+
+const {
+	entities,
+	recordedDays,
+	totalCost,
+	setEntities,
+	setTotalCost,
+	setRecordedDays
+} = capsulatedStore.setup()
 
 
 // 非响应式数据
@@ -17,17 +26,6 @@ const formattedDate = dayjs(new Date()).format('YYYY年MM月DD日')
 // 响应式数据
 // entity 用于收集一个条目的金额和详情，amount 是金额，detail 是详情
 const entity = reactive([])
-
-// vuex 数据	
-const store = useStore()
-const entities = computed(() => store.getters.getEntities)
-const recordedDays = computed(() => store.getters.getRecordedDays)
-const totalCost = computed(() => store.getters.getTotalCost)
-function setEntities(newEntites) { store.commit('setEntities', { newEntites: JSON.stringify(newEntites) }) }
-function setTotalCost(newTotalCost) { store.commit('setTotalCost', { newTotalCost }) }
-function setRecordedDays(newRecordedDays) {
-	store.commit('setRecordedDays', { newRecordedDays: JSON.stringify(newRecordedDays) })
-}
 
 // Bill
 const router = useRouter()

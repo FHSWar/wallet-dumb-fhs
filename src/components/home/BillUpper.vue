@@ -1,17 +1,16 @@
 <script setup>
+import capsulatedStore from '../storeUtil.vue'
 import { computed, reactive, ref } from "vue";
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
 import dayjs from 'dayjs'
+
+const { totalCost } = capsulatedStore.setup()
 	
 const currentDate = ref(new Date())
 const minDate = new Date(2020, 0, 1)
 const maxDate = new Date(2025, 10, 1)
 
 const datePickerShow = ref(false)
-const store = useStore()
-const totalCost = computed(() => store.getters.getTotalCost)
-// const totalCost = ref(Number(localStorage.totalCost))
 
 const formattedDate = computed(() => dayjs(currentDate.value).format().slice(0, 10))
 const pickDate = () => { console.log('拿到了', formattedDate) }

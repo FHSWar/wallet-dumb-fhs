@@ -1,33 +1,17 @@
 <script setup>
-import { computed } from 'vue'
-import { useStore } from 'vuex'
+import capsulatedStore from '../storeUtil.vue'
+const {
+	entities,
+	recordedDays,
+	totalCost,
+	setEntities,
+	setTotalCost,
+	setRecordedDays
+} = capsulatedStore.setup()
 
 // `defineProps` is a compiler macro and no longer needs to be imported.
 defineProps({ data: { type: Object, default: () => { } } })
 
-// 看似有点酷，实则没必要，或者说不应该在这里算
-/* watch(()=>props.data, (newVal)=>{
-	const res = []
-	// 每天花销求和然后推入数组
-	for(const dataItem in newVal) {
-		const sum = newVal[dataItem].reduce((prev, cur) => {
-			return prev + Number(cur.amount)
-		}, 0).toFixed(2)
-		res.push(sum)
-	}
-	sumArr.value = res
-}) */
-
-// vuex 数据	
-const store = useStore()
-const entities = computed(() => store.getters.getEntities)
-const recordedDays = computed(() => store.getters.getRecordedDays)
-const totalCost = computed(() => store.getters.getTotalCost)
-function setEntities(newEntites) { store.commit('setEntities', { newEntites: JSON.stringify(newEntites) }) }
-function setTotalCost(newTotalCost) { store.commit('setTotalCost', { newTotalCost }) }
-function setRecordedDays(newRecordedDays) {
-	store.commit('setRecordedDays', { newRecordedDays: JSON.stringify(newRecordedDays) })
-}
 // dayIndex 是日期，entityIndex 被选中日被选中条目的下标
 function delItem(dayIndex, entityIndex) {
 	/**
