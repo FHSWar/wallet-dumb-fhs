@@ -1,8 +1,10 @@
 <script setup>
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import dayjs from 'dayjs'
+import { useStore } from 'vuex'
 import { Toast } from 'vant'
+import dayjs from 'dayjs'
+
 
 // 非响应式数据
 const types = ['衣', '食', '住', '行']
@@ -16,27 +18,50 @@ const formattedDate = dayjs(new Date()).format('YYYY年MM月DD日')
 // entity 用于收集一个条目的金额和详情，amount 是金额，detail 是详情
 const entity = reactive([])
 
+// vuex 数据	
+const store = useStore()
+const entities = computed(() => store.getters.getEntities)
+const recordedDays = computed(() => store.getters.getRecordedDays)
+const totalCost = computed(() => store.getters.getTotalCost)
+function setEntities(newEntites) { store.commit('setEntities', { newEntites: JSON.stringify(newEntites) }) }
+function setTotalCost(newTotalCost) { store.commit('setTotalCost', { newTotalCost }) }
+function setRecordedDays(newRecordedDays) {
+	store.commit('setRecordedDays', { newRecordedDays: JSON.stringify(newRecordedDays) })
+}
+
 // Bill
 const router = useRouter()
 const bill = () => { router.push({ name: 'Bill' }) }
+
+// 单比开销（），月开销，维护总开销（totalCost）
 function saveToLocal(type) {
-	const [detail, amount] = entity
-
-	// 如果没有 entities 数组就初始化个，按道理一个用户只应该初始化一次
-	if (localStorage.entities === undefined) localStorage.entities = JSON.stringify({})
-
 	/* 维护要存入 localStorage 中的 entity */
+	const [detail, rawAmount] = entity
 	// 如果没有传 detail 进来或者 detail 不是数字要提示
-	if (amount === undefined) { Toast({ message: '请输入金额', position: 'bottom' }); return }
+	if (rawAmount === undefined) { Toast({ message: '请输入金额', position: 'bottom' }); return }
 	// 这里用双等确实合适
-	else if (amount != Number(amount)) { Toast({ message: '请输入数字', position: 'bottom' }); return }
+	else if (rawAmount != Number(rawAmount)) { Toast({ message: '请输入数字', position: 'bottom' }); return }
+	// 处理一下 rawAmount，处理为两位小数的形式
+	const amount = Number(rawAmount).toFixed(2)
 
-	// localStorage 只能存字符串，这里从字符串里取出来开始操作，搞完再序列化存回 localStorage
-	const entities = JSON.parse(localStorage.entities)
-	// 每天一个对象，这样比较快, 当天第一个条目得初始化
-	if (entities[formattedDate] === undefined) entities[formattedDate] = []
-	entities[formattedDate].push({ amount, detail, type })
-	localStorage.entities = JSON.stringify(entities)
+	// const recordedDays = JSON.parse(localStorage.recordedDays)
+	// 每天一个对象，这样比较快, 当天第一个条目得初始化，然后维护个
+	if (entities.value[`${formattedDate}Arr`] === undefined) {
+		entities.value[`${formattedDate}Arr`] = []
+		entities.value[`${formattedDate}Total`] = 0
+	}
+	// 每天花销明细和每天花销的和维护个，然后改 vuex 对应 state
+	entities.value[`${formattedDate}Arr`].push({ amount: amount, detail, type })
+	entities.value[`${formattedDate}Total`] = Number(entities.value[`${formattedDate}Total`]) + Number(amount)
+	setEntities(entities.value)
+	// 哪些天有数据维护个
+	recordedDays.value.includes(formattedDate) ? null : recordedDays.value.push(formattedDate)
+	setRecordedDays(recordedDays.value)
+	// localStorage.entities.value = JSON.stringify(entities.value)
+	// localStorage.recordedDays = JSON.stringify(recordedDays)
+
+	// todo 当月总额算一下，之后加上按月区分和年总额
+	setTotalCost(totalCost.value + Number(amount))
 
 	// entity 存到 local 后要清空，防止数据污染
 	entity.length = 0
