@@ -1,5 +1,6 @@
 <script setup>
-import capsulatedStore from '../components/storeUtil.vue'
+import capsulatedStore from '../utils/store.vue'
+import formatDay from '../utils/formatDay.vue'
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { Toast } from 'vant'
@@ -13,6 +14,7 @@ const {
 	setTotalCostMonth,
 	setRecordedDays
 } = capsulatedStore.setup()
+const { formattedMonth } = formatDay.setup()
 
 
 // 非响应式数据
@@ -22,7 +24,6 @@ const inputs = [
 	{ title: '支出：', placeholder: '花费的金额' }
 ]
 const formattedDate = dayjs(new Date()).format('YYYY年MM月DD日')
-const formattedMonth = formattedDate.slice(0, 8)
 
 // 响应式数据
 // entity 用于收集一个条目的金额和详情，amount 是金额，detail 是详情
@@ -59,7 +60,7 @@ function saveToLocal(type) {
 	// localStorage.entities.value = JSON.stringify(entities.value)
 	// localStorage.recordedDays = JSON.stringify(recordedDays)
 
-	// todo 当月总额算一下，之后加上按月区分和年总额
+	// 当月总额算一下
 	if(totalCostMonth.value[formattedMonth] === undefined) totalCostMonth.value[formattedMonth] = 0
 	totalCostMonth.value[formattedMonth] = Number(totalCostMonth.value[formattedMonth]) + Number(amount)
 	setTotalCostMonth(totalCostMonth.value, formattedMonth)

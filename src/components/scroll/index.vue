@@ -57,7 +57,6 @@ onUpdated(() => {
 
 // 判断是否需要向父组件发射事件，以及是否展示对应块的提示文字和动画，这个处理很关键
 function initScrollParam() {
-    // console.log('onBeforeMount', Object.keys(attrs))
     const attrsKeys = Object.keys(attrs)
     switch(true) {
         case attrsKeys.includes('onPullingDown') && attrsKeys.includes('onPullingUp'):

@@ -7,7 +7,6 @@ import './index.css'
 
 import { Button, Cell, DatetimePicker, SwipeCell, Tab, Tabs, Toast } from 'vant';
 
-// Vue.prototype.dayjs = dayjs;
 createApp(App)
     .use(router)
     .use(store)

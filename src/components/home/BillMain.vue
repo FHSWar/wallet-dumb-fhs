@@ -1,6 +1,6 @@
 <script setup>
-import capsulatedStore from '../storeUtil.vue'
-import dayjs from 'dayjs'
+import capsulatedStore from '../../utils/store.vue'
+import formatDay from '../../utils/formatDay.vue'
 
 const {
 	entities,
@@ -10,8 +10,8 @@ const {
 	setTotalCostMonth,
 	setRecordedDays
 } = capsulatedStore.setup()
+const { formattedMonth } = formatDay.setup()
 
-const formattedMonth = dayjs(new Date()).format('YYYY年MM月')
 
 // `defineProps` is a compiler macro and no longer needs to be imported.
 defineProps({ data: { type: Object, default: () => { } } })

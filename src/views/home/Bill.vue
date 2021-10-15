@@ -1,5 +1,5 @@
 <script setup>
-import capsulatedStore from '../../components/storeUtil.vue'
+import capsulatedStore from '../../utils/store.vue'
 import BillUpper from '../../components/home/BillUpper.vue'
 import BillMain from '../../components/home/BillMain.vue'
 import { onMounted, ref, watch } from 'vue'

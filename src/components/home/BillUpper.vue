@@ -1,10 +1,12 @@
 <script setup>
-import capsulatedStore from '../storeUtil.vue'
+import capsulatedStore from '../../utils/store.vue'
+import formatDay from '../../utils/formatDay.vue'
 import { computed, reactive, ref } from "vue";
 import { useRouter } from 'vue-router'
 import dayjs from 'dayjs'
 
 const { totalCostMonth } = capsulatedStore.setup()
+const { formattedMonth } = formatDay.setup()
 
 const currentDate = ref(new Date())
 const minDate = new Date(2020, 0, 1)
@@ -13,7 +15,6 @@ const maxDate = new Date(2025, 10, 1)
 const datePickerShow = ref(false)
 
 const formattedDate = computed(() => dayjs(currentDate.value).format().slice(0, 10))
-const formattedMonth = computed(() => dayjs(currentDate.value).format('YYYY年MM月'))
 const pickDate = () => { console.log('拿到了', formattedDate) }
 const cancelPickDate = () => { datePickerShow.value = false }
 const portions = reactive([
@@ -23,7 +24,6 @@ const portions = reactive([
 	{ type: '行', percentage: '5%', color: 'border-green-500' },
 ])
 
-console.log('totalCostMonth[formattedMonth]', totalCostMonth[formattedMonth])
 const router = useRouter()
 const chargeUp = () => { router.push('ChargeUp') }
 </script>
