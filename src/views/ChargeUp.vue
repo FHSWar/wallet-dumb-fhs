@@ -8,9 +8,9 @@ import dayjs from 'dayjs'
 const {
 	entities,
 	recordedDays,
-	totalCost,
+	totalCostMonth,
 	setEntities,
-	setTotalCost,
+	setTotalCostMonth,
 	setRecordedDays
 } = capsulatedStore.setup()
 
@@ -22,6 +22,7 @@ const inputs = [
 	{ title: '支出：', placeholder: '花费的金额' }
 ]
 const formattedDate = dayjs(new Date()).format('YYYY年MM月DD日')
+const formattedMonth = formattedDate.slice(0, 8)
 
 // 响应式数据
 // entity 用于收集一个条目的金额和详情，amount 是金额，detail 是详情
@@ -59,7 +60,9 @@ function saveToLocal(type) {
 	// localStorage.recordedDays = JSON.stringify(recordedDays)
 
 	// todo 当月总额算一下，之后加上按月区分和年总额
-	setTotalCost(totalCost.value + Number(amount))
+	if(totalCostMonth.value[formattedMonth] === undefined) totalCostMonth.value[formattedMonth] = 0
+	totalCostMonth.value[formattedMonth] = Number(totalCostMonth.value[formattedMonth]) + Number(amount)
+	setTotalCostMonth(totalCostMonth.value, formattedMonth)
 
 	// entity 存到 local 后要清空，防止数据污染
 	entity.length = 0

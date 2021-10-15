@@ -1,13 +1,17 @@
 <script setup>
 import capsulatedStore from '../storeUtil.vue'
+import dayjs from 'dayjs'
+
 const {
 	entities,
 	recordedDays,
-	totalCost,
+	totalCostMonth,
 	setEntities,
-	setTotalCost,
+	setTotalCostMonth,
 	setRecordedDays
 } = capsulatedStore.setup()
+
+const formattedMonth = dayjs(new Date()).format('YYYY年MM月')
 
 // `defineProps` is a compiler macro and no longer needs to be imported.
 defineProps({ data: { type: Object, default: () => { } } })
@@ -31,7 +35,9 @@ function delItem(dayIndex, entityIndex) {
 		entities.value[`${day}Total`] -= Number(deletedEntity.amount)
 	}
 	// 删除必然是要维护总额的
-	setTotalCost(Number(totalCost.value) - Number(deletedEntity.amount))
+	totalCostMonth.value[formattedMonth] =
+		Number(totalCostMonth.value[formattedMonth]) - Number(deletedEntity.amount)
+	setTotalCostMonth(totalCostMonth.value)
 	setEntities(entities.value)
 }
 function editItem() { console.log('editItem') }
@@ -45,7 +51,8 @@ function editItem() { console.log('editItem') }
 		<div v-for="(day, dayIndex) in data.recordedDays" :key="dayIndex">
 			<header class="flex justify-between px-2 bg-yellow-50 text-gray-400">
 				<div>{{ day }}</div>
-				<div class="text-gray-600">单日支出：¥ {{ data.entities[`${day}Total`] }}</div>
+				<!-- 别处计算用的多， 于是把调用 .toFixed(2) 放到这里 -->
+				<div class="text-gray-600">单日支出：¥ {{ data.entities[`${day}Total`].toFixed(2) }}</div>
 			</header>
 			<div>
 				<div

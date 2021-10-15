@@ -4,8 +4,8 @@ import { computed, reactive, ref } from "vue";
 import { useRouter } from 'vue-router'
 import dayjs from 'dayjs'
 
-const { totalCost } = capsulatedStore.setup()
-	
+const { totalCostMonth } = capsulatedStore.setup()
+
 const currentDate = ref(new Date())
 const minDate = new Date(2020, 0, 1)
 const maxDate = new Date(2025, 10, 1)
@@ -13,6 +13,7 @@ const maxDate = new Date(2025, 10, 1)
 const datePickerShow = ref(false)
 
 const formattedDate = computed(() => dayjs(currentDate.value).format().slice(0, 10))
+const formattedMonth = computed(() => dayjs(currentDate.value).format('YYYY年MM月'))
 const pickDate = () => { console.log('拿到了', formattedDate) }
 const cancelPickDate = () => { datePickerShow.value = false }
 const portions = reactive([
@@ -22,13 +23,14 @@ const portions = reactive([
 	{ type: '行', percentage: '5%', color: 'border-green-500' },
 ])
 
+console.log('totalCostMonth[formattedMonth]', totalCostMonth[formattedMonth])
 const router = useRouter()
 const chargeUp = () => { router.push('ChargeUp') }
 </script>
 
 <template>
-	<div id="bill-upper" class="flex flex-col h-40 bg-yellow-100 overflow-hidden">
-		<header class="flex-1 flex justify-center items-center px-4">
+	<div id="bill-upper" class="flex flex-col h-28 bg-yellow-100 overflow-hidden">
+		<main class="flex-1 flex justify-center mt-2 px-4">
 			<div @click="datePickerShow = !datePickerShow">
 				{{ formattedDate }}
 				<span
@@ -39,9 +41,15 @@ const chargeUp = () => { router.push('ChargeUp') }
 					: { borderTopColor: 'rgb(252, 211, 77)' }"
 				></span>
 			</div>
-			<div class="flex-1 text-right">花销总额：￥{{ totalCost }}</div>
-		</header>
-		<footer class="flex-1 flex">
+			<!-- 别处计算用的多， 于是把调用 .toFixed(2) 放到这里 -->
+			<div class="flex-1 text-right">月度总额：￥{{ 
+					totalCostMonth[formattedMonth] === undefined
+						? '0.00'
+						: totalCostMonth[formattedMonth].toFixed(2)
+				}}
+			</div><!--.toFixed(2)-->
+		</main>
+		<footer class="flex-1 flex mb-4">
 			<div
 				class="flex-1 self-center mx-2 border-b-8 py-2 text-center"
 				v-for="portion in portions"

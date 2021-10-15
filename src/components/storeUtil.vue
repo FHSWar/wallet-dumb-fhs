@@ -9,20 +9,22 @@ export default {
         const store = useStore()
         const entities = computed(() => store.getters.getEntities)
         const recordedDays = computed(() => store.getters.getRecordedDays)
-        const totalCost = computed(() => store.getters.getTotalCost)
+        const totalCostMonth = computed(() => store.getters.getTotalCostMonth)
         function setEntities(newEntites) { store.commit('setEntities', { newEntites: JSON.stringify(newEntites) }) }
-        function setTotalCost(newTotalCost) { store.commit('setTotalCost', { newTotalCost }) }
         function setRecordedDays(newRecordedDays) {
             store.commit('setRecordedDays', { newRecordedDays: JSON.stringify(newRecordedDays) })
+        }
+        function setTotalCostMonth(newTotalCostMonth) {
+            store.commit('setTotalCostMonth', { newTotalCostMonth: JSON.stringify(newTotalCostMonth) })
         }
 
         return {
             entities,
             recordedDays,
-            totalCost,
+            totalCostMonth,
             setEntities,
-            setTotalCost,
-            setRecordedDays
+            setRecordedDays,
+            setTotalCostMonth
         }
     }
 }

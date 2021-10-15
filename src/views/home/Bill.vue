@@ -5,6 +5,8 @@ import BillMain from '../../components/home/BillMain.vue'
 import { onMounted, ref, watch } from 'vue'
 
 const { entities, recordedDays } = capsulatedStore.setup()
+
+const active = ref(0);
 const data = ref({})
 onMounted(() => { getLocalData() })
 
@@ -15,8 +17,24 @@ function getLocalData() { data.value = { entities: entities.value, recordedDays:
 </script>
 
 <template>
-	<div class="flex flex-col relative">
-		<BillUpper />
-		<BillMain :data="data" />
+	<div class="bill-wrapper flex flex-col relative">
+		<van-tabs v-model:active="active">
+			<van-tab title="月">
+				<BillUpper />
+				<BillMain :data="data" />
+			</van-tab>
+			<van-tab title="季">季季</van-tab>
+			<van-tab title="年">年年</van-tab>
+		</van-tabs>
 	</div>
 </template>
+
+<style>
+/* 改 UI 框架的样式就不能用 scoped 了 */
+.bill-wrapper .van-tabs__line {
+	background-color: #FBBF24;
+}
+.bill-wrapper .van-tab {
+	background-color: #FEF3C7;
+}
+</style>
